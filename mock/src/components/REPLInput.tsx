@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import "../styles/main.css";
 import { ControlledInput } from "./ControlledInput";
+import { handleView, handleSearch, handleLoad } from "./Handlers";
 
 interface REPLInputProps {
   history: string[];
@@ -13,29 +14,9 @@ interface REPLFunction {
 
 export function REPLInput(props: REPLInputProps) {
   const [commandString, setCommandString] = useState<string>("");
-
-  const [count, setCount] = useState<number>(0);
-
-  const commandMap = new Map<string, REPLFunction>([
-    ["mode", handleMode],
-    ["view", handleView],
-    ["load", handleLoad],
-    ["search", handleSearch],
-  ]);
-
   const [modeBrief, setMode] = useState<Boolean>(true);
 
-  function handleView(args: Array<String>) {
-    return Array.from([[""]]);
-  }
-
-  function handleLoad(args: Array<String>) {
-    return Array.from([[""]]);
-  }
-
-  function handleSearch(args: Array<String>) {
-    return Array.from([[""]]);
-  }
+  const [count, setCount] = useState<number>(0);
 
   function handleMode(args: Array<string>) {
     let output;
@@ -50,7 +31,15 @@ export function REPLInput(props: REPLInputProps) {
     return Array.from([[output]]);
   }
 
+  const commandMap = new Map<string, REPLFunction>([
+    ["mode", handleMode],
+    ["view", handleView],
+    ["load", handleLoad],
+    ["search", handleSearch],
+  ]);
+
   function handleSubmit(commandString: string) {
+    console.log("Handle submit");
     setCount(count + 1);
 
     const commandArgs: string[] = commandString.split(" ");
