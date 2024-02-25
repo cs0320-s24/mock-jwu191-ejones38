@@ -4,32 +4,35 @@ import { ControlledInput } from "./ControlledInput";
 import { REPLFunction } from "./Handlers";
 
 interface REPLInputProps {
-  // TODO: Fill this with desired props... Maybe something to keep track of the submitted commands
-  // CHANGED
   history: string[];
   setHistory: Dispatch<SetStateAction<string[]>>;
 }
-// You can use a custom interface or explicit fields or both! An alternative to the current function header might be:
-// REPLInput(history: string[], setHistory: Dispatch<SetStateAction<string[]>>)
+
 function handleView(args: Array<String>) {
   return Array.from([[""]]);
 }
 
+function handleLoad(args: Array<String>) {
+  return Array.from([[""]]);
+}
+
+function handleSearch(args: Array<String>) {
+  return Array.from([[""]]);
+}
+
 export function REPLInput(props: REPLInputProps) {
-  const [commandString, setCommandString] = useState<string>("mode");
+  const [commandString, setCommandString] = useState<string>("");
 
   const [count, setCount] = useState<number>(0);
 
-  const commandMap = {
-    mode: handleMode,
-    view: handleView,
-    search: handleSearch,
-    load: handleLoad,
-  };
+  const commandMap = new Map<string, REPLFunction>([
+    ["mode", handleMode],
+    ["view", handleView],
+    ["load", handleLoad],
+    ["search", handleSearch],
+  ]);
 
-  //test
-
-  const [modeBrief, boolSwitch] = useState<Boolean>(true);
+  const [modeBrief, setMode] = useState<Boolean>(true);
 
   function handleMode(args: Array<string>) {
     let output;
@@ -39,34 +42,28 @@ export function REPLInput(props: REPLInputProps) {
       output = "Mode set to Verbose";
     }
 
-    boolSwitch(!modeBrief);
+    setMode(!modeBrief);
 
     return Array.from([[output]]);
-  }
-
-  function handleLoad(args: Array<String>) {
-    return Array.from([[""]]);
-  }
-
-  function handleSearch(args: Array<String>) {
-    return Array.from([[""]]);
   }
 
   function handleSubmit(commandString: string) {
     setCount(count + 1);
 
     const commandArgs: string[] = commandString.split(" ");
-    if (commandArgs.at(0) != undefined) {
-      const command = commandMap["mode"];
-      let commandReturn;
+    let commandReturn;
+    if (commandArgs.length > 0) {
+      const command = commandMap.get(commandArgs[0]);
       if (command != undefined) {
         commandReturn = command(commandArgs);
       } else {
         commandReturn = "Command does not exist :(";
       }
+    } else {
+      commandReturn = "";
     }
 
-    props.setHistory([...props.history, commandString.toString()]); //FIX THIS LATER
+    props.setHistory([...props.history, commandReturn.toString()]); //FIX THIS LATER
     setCommandString("");
   }
 
