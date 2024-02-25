@@ -1,23 +1,14 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import "../styles/main.css";
 import { ControlledInput } from "./ControlledInput";
-import { REPLFunction } from "./Handlers";
 
 interface REPLInputProps {
   history: string[];
   setHistory: Dispatch<SetStateAction<string[]>>;
 }
 
-function handleView(args: Array<String>) {
-  return Array.from([[""]]);
-}
-
-function handleLoad(args: Array<String>) {
-  return Array.from([[""]]);
-}
-
-function handleSearch(args: Array<String>) {
-  return Array.from([[""]]);
+interface REPLFunction {
+  (args: Array<string>): String | String[][];
 }
 
 export function REPLInput(props: REPLInputProps) {
@@ -33,6 +24,18 @@ export function REPLInput(props: REPLInputProps) {
   ]);
 
   const [modeBrief, setMode] = useState<Boolean>(true);
+
+  function handleView(args: Array<String>) {
+    return Array.from([[""]]);
+  }
+
+  function handleLoad(args: Array<String>) {
+    return Array.from([[""]]);
+  }
+
+  function handleSearch(args: Array<String>) {
+    return Array.from([[""]]);
+  }
 
   function handleMode(args: Array<string>) {
     let output;
