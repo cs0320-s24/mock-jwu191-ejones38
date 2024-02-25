@@ -27,6 +27,8 @@ export function REPLInput(props: REPLInputProps) {
     load: handleLoad,
   };
 
+  //test
+
   const [modeBrief, boolSwitch] = useState<Boolean>(true);
 
   function handleMode(args: Array<string>) {
