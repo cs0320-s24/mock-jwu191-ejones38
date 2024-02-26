@@ -39,7 +39,6 @@ export function REPLInput(props: REPLInputProps) {
   ]);
 
   function handleSubmit(commandString: string) {
-    console.log("Handle submit");
     setCount(count + 1);
 
     const commandArgs: string[] = commandString.split(" ");
