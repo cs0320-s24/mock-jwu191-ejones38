@@ -22,6 +22,8 @@ export function REPLInput(props: REPLInputProps) {
 
   const [file, setFile] = useState<String>("");
 
+  const [headers, setHeaders] = useState<Boolean>(false);
+
   const commandMap = new Map<string, REPLFunction>([
     ["mode", handleMode],
     ["view", handleView],
@@ -37,7 +39,15 @@ export function REPLInput(props: REPLInputProps) {
     if (commandArgs.length > 0) {
       const command = commandMap.get(commandArgs[0]);
       if (command != undefined) {
-        commandReturn = command(commandArgs, modeBrief, setMode, file, setFile);
+        commandReturn = command(
+          commandArgs,
+          modeBrief,
+          setMode,
+          file,
+          setFile,
+          headers,
+          setHeaders
+        );
       } else {
         commandReturn = "Command does not exist :(";
       }
