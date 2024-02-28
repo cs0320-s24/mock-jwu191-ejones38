@@ -1,15 +1,17 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import "../styles/main.css";
 import { ControlledInput } from "./ControlledInput";
-import { handleView, handleSearch, handleLoad } from "./Handlers";
+import {
+  handleMode,
+  handleView,
+  handleSearch,
+  handleLoad,
+  REPLFunction,
+} from "./Handlers";
 
 interface REPLInputProps {
   history: string[];
   setHistory: Dispatch<SetStateAction<string[]>>;
-}
-
-interface REPLFunction {
-  (args: Array<string>): String | String[][];
 }
 
 export function REPLInput(props: REPLInputProps) {
@@ -18,35 +20,24 @@ export function REPLInput(props: REPLInputProps) {
 
   const [count, setCount] = useState<number>(0);
 
-  function handleMode(args: Array<string>) {
-    let output;
-    if (modeBrief) {
-      output = "Mode set to Brief";
-    } else {
-      output = "Mode set to Verbose";
-    }
-
-    setMode(!modeBrief);
-
-    return Array.from([[output]]);
-  }
+  const [file, setFile] = useState<String>("");
 
   const commandMap = new Map<string, REPLFunction>([
     ["mode", handleMode],
     ["view", handleView],
-    ["load", handleLoad],
+    ["load_file", handleLoad],
     ["search", handleSearch],
   ]);
 
   function handleSubmit(commandString: string) {
     setCount(count + 1);
 
-    const commandArgs: string[] = commandString.split(" ");
+    const commandArgs: Array<string> = commandString.split(" ");
     let commandReturn;
     if (commandArgs.length > 0) {
       const command = commandMap.get(commandArgs[0]);
       if (command != undefined) {
-        commandReturn = command(commandArgs);
+        commandReturn = command(commandArgs, modeBrief, setMode, file, setFile);
       } else {
         commandReturn = "Command does not exist :(";
       }
