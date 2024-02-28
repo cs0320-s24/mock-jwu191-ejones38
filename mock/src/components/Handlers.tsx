@@ -10,7 +10,7 @@ export interface REPLFunction {
     setBrief: Dispatch<SetStateAction<Boolean>>,
     file: String,
     setFileName: Dispatch<SetStateAction<String>>
-  ): String | String[][];
+  ): string;
 }
 
 function modeifyOutput(
@@ -20,15 +20,11 @@ function modeifyOutput(
   output: Array<Array<String>>
 ) {
   if (brief) {
-    return output;
+    return output.join("<br>");
   }
-  let commandText = "Command: " + command + " ";
-  for (let i = 1; i < args.length; i++) {
-    commandText += args[i] + " ";
-  }
-  output.unshift([commandText.trim()]);
-  console.log(output);
-  return output;
+  let commandText = "Command: " + command + args.slice(1, undefined).join(" ");
+  output.unshift([commandText]);
+  return output.join("~new row~");
 }
 
 function mockHandleView(
@@ -80,7 +76,23 @@ function mockHandleSearch(
   file: String,
   setFileName: Dispatch<SetStateAction<String>>
 ) {
-  let output = Array.from([[""]]);
+  let output;
+  const fileData = mockData.get(file);
+  if (args.length < 3) {
+    output = Array.from([["Not enough arguments"]]);
+  } else if (file.length == 0) {
+    output = Array.from([["No file has been loaded"]]);
+  } else if (fileData == undefined) {
+    output = Array.from([["File " + file + " does not exist"]]);
+  } else {
+    const column = args[1];
+    const value = args[2];
+    const columnIdx = parseInt(column);
+    if (isNaN(columnIdx)) {
+      output = Array.from([[" "]]);
+    }
+    output = Array.from([[" "]]);
+  }
   return modeifyOutput(brief, "search", args, output);
 }
 

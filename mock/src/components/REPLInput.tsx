@@ -45,7 +45,7 @@ export function REPLInput(props: REPLInputProps) {
       commandReturn = "";
     }
 
-    props.setHistory([...props.history, commandReturn.toString()]); //FIX THIS LATER
+    props.setHistory([...props.history, commandReturn]);
     setCommandString("");
   }
 
