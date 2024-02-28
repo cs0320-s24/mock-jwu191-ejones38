@@ -19,19 +19,23 @@ function modeifyOutput(
   args: Array<String>,
   output: Array<Array<String>>
 ) {
+  let modifiedOutput = [...output];
   if (brief) {
-    return createViewTable(output);
+    return createViewTable(output, "");
   }
-  let commandText = "Command: " + command + args.slice(1, undefined).join(" ");
-  createViewTable(output);
-  output.unshift([commandText]);
-  return createViewTable(output);
+  let commandText =
+    "Command: " + command + " " + args.slice(1, undefined).join(" ");
+  return createViewTable(modifiedOutput, commandText);
 }
-export function createViewTable(data: Array<Array<String>>) {
+export function createViewTable(
+  data: Array<Array<String>>,
+  commandText: string
+) {
   return (
     <div className="table-container">
-      {" "}
-      <h2></h2>
+      <div>
+        <p>{commandText}</p>
+      </div>
       <table>
         <tbody>
           {data.map((row, rowIndex) => (
