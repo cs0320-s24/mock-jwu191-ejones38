@@ -9,7 +9,9 @@ export interface REPLFunction {
     brief: Boolean,
     setBrief: Dispatch<SetStateAction<Boolean>>,
     file: String,
-    setFileName: Dispatch<SetStateAction<String>>
+    setFileName: Dispatch<SetStateAction<String>>,
+    headers: Boolean,
+    setHeaders: Dispatch<SetStateAction<Boolean>>
   ): JSX.Element;
 }
 
@@ -52,7 +54,9 @@ function mockHandleView(
   brief: Boolean,
   setBrief: Dispatch<SetStateAction<Boolean>>,
   file: String,
-  setFileName: Dispatch<SetStateAction<String>>
+  setFileName: Dispatch<SetStateAction<String>>,
+  headers: Boolean,
+  setHeaders: Dispatch<SetStateAction<Boolean>>
 ) {
   let output;
   const fileData = mockData.get(file);
@@ -71,19 +75,32 @@ function mockHandleLoad(
   brief: Boolean,
   setBrief: Dispatch<SetStateAction<Boolean>>,
   file: String,
-  setFileName: Dispatch<SetStateAction<String>>
+  setFileName: Dispatch<SetStateAction<String>>,
+  headers: Boolean,
+  setHeaders: Dispatch<SetStateAction<Boolean>>
 ) {
   let output;
-  if (args.length < 2) {
+  if (args.length < 3) {
     output = Array.from([["Not enough arguments"]]);
   } else {
     const fileName = args[1];
+    const headersStr = args[2];
     const fileData = mockData.get(fileName);
     if (fileData == undefined) {
       output = Array.from([["File " + fileName + " does not exist"]]);
     } else {
       output = Array.from([["File " + file + " loaded successfully."]]);
-      setFileName(fileName);
+      if (headersStr.toLowerCase() == "true") {
+        if (fileData.length == 0) {
+          output = Array.from([["File is not long enough to have headers"]]);
+        } else {
+          setFileName(fileName);
+          setHeaders(true);
+        }
+      } else {
+        setFileName(fileName);
+        setHeaders(false);
+      }
     }
   }
   return modeifyOutput(brief, "load_file", args, output);
@@ -94,7 +111,9 @@ function mockHandleSearch(
   brief: Boolean,
   setBrief: Dispatch<SetStateAction<Boolean>>,
   file: String,
-  setFileName: Dispatch<SetStateAction<String>>
+  setFileName: Dispatch<SetStateAction<String>>,
+  headers: Boolean,
+  setHeaders: Dispatch<SetStateAction<Boolean>>
 ) {
   let output;
   const fileData = mockData.get(file);
@@ -108,10 +127,31 @@ function mockHandleSearch(
     const column = args[1];
     const value = args[2];
     const columnIdx = parseInt(column);
-    if (isNaN(columnIdx)) {
-      output = Array.from([[" "]]);
+    if (!isNaN(columnIdx)) {
+      if (fileData.length == 0 || fileData[0].length > columnIdx) {
+        output = fileData.filter(
+          (row, i) => (!headers || i > 0) && row[columnIdx] == value
+        );
+      } else {
+        output = Array.from([["Column index out of bounds"]]);
+      }
+    } else {
+      if (headers) {
+        const headerRow = fileData[0]; // We ensure that the first row exists in mockHandleLoad
+        const headerCol = headerRow.findIndex((e) => e == column);
+        if (headerCol == -1) {
+          output = Array.from([["Column could not be found"]]);
+        } else {
+          output = fileData.filter(
+            (row, i) => i > 0 && row[headerCol] == value
+          );
+        }
+      } else {
+        output = Array.from([
+          ["File has no headers; Cannot do string column search"],
+        ]);
+      }
     }
-    output = Array.from([[" "]]);
   }
   return modeifyOutput(brief, "search", args, output);
 }
@@ -121,9 +161,19 @@ export function handleView(
   brief: Boolean,
   setBrief: Dispatch<SetStateAction<Boolean>>,
   fileName: String,
-  setFileName: Dispatch<SetStateAction<String>>
+  setFileName: Dispatch<SetStateAction<String>>,
+  headers: Boolean,
+  setHeaders: Dispatch<SetStateAction<Boolean>>
 ) {
-  return mockHandleView(args, brief, setBrief, fileName, setFileName);
+  return mockHandleView(
+    args,
+    brief,
+    setBrief,
+    fileName,
+    setFileName,
+    headers,
+    setHeaders
+  );
 }
 
 export function handleLoad(
@@ -131,9 +181,19 @@ export function handleLoad(
   brief: Boolean,
   setBrief: Dispatch<SetStateAction<Boolean>>,
   fileName: String,
-  setFileName: Dispatch<SetStateAction<String>>
+  setFileName: Dispatch<SetStateAction<String>>,
+  headers: Boolean,
+  setHeaders: Dispatch<SetStateAction<Boolean>>
 ) {
-  return mockHandleLoad(args, brief, setBrief, fileName, setFileName);
+  return mockHandleLoad(
+    args,
+    brief,
+    setBrief,
+    fileName,
+    setFileName,
+    headers,
+    setHeaders
+  );
 }
 
 export function handleSearch(
@@ -141,9 +201,19 @@ export function handleSearch(
   brief: Boolean,
   setBrief: Dispatch<SetStateAction<Boolean>>,
   fileName: String,
-  setFileName: Dispatch<SetStateAction<String>>
+  setFileName: Dispatch<SetStateAction<String>>,
+  headers: Boolean,
+  setHeaders: Dispatch<SetStateAction<Boolean>>
 ) {
-  return mockHandleSearch(args, brief, setBrief, fileName, setFileName);
+  return mockHandleSearch(
+    args,
+    brief,
+    setBrief,
+    fileName,
+    setFileName,
+    headers,
+    setHeaders
+  );
 }
 
 export function handleMode(
@@ -151,7 +221,9 @@ export function handleMode(
   brief: Boolean,
   setBrief: Dispatch<SetStateAction<Boolean>>,
   fileName: String,
-  setFileName: Dispatch<SetStateAction<String>>
+  setFileName: Dispatch<SetStateAction<String>>,
+  headers: Boolean,
+  setHeaders: Dispatch<SetStateAction<Boolean>>
 ) {
   let output;
   setBrief(!brief);
