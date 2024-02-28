@@ -20,7 +20,7 @@ export function REPLInput(props: REPLInputProps) {
   const [count, setCount] = useState<number>(0);
   const [file, setFile] = useState<String>("");
   const [headers, setHeaders] = useState<Boolean>(false);
-  
+
   const commandMap: Map<String, REPLFunction> = new Map<String, REPLFunction>([
     ["mode", handleMode],
     ["view", handleView],
@@ -31,7 +31,8 @@ export function REPLInput(props: REPLInputProps) {
   function handleSubmit(commandString: string) {
     setCount(count + 1);
 
-    const commandArgs: Array<string> = commandString.split(" ");
+    const commandArgs: Array<string> = commandString.split(/ *& */);
+    console.log(commandArgs);
     let commandReturn;
     if (commandArgs.length > 0) {
       const command = commandMap.get(commandArgs[0]);

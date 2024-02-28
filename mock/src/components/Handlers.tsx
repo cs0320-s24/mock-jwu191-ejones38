@@ -23,22 +23,24 @@ function modeifyOutput(
 ) {
   let modifiedOutput = [...output];
   if (brief) {
-    return createViewTable(output, "");
+    return createViewTable(output, <div />, <div />);
   }
-  let commandText =
-    "Command: " + command + " " + args.slice(1, undefined).join(" ");
-  return createViewTable(modifiedOutput, commandText);
+  const commandText =
+    "Command: " + command + " & " + args.slice(1, undefined).join(" & ");
+  const commandElt = <h2 className="small-font">{commandText}</h2>;
+  const outputElt = <h2 className="small-font">{"Output:"}</h2>;
+  return createViewTable(modifiedOutput, commandElt, outputElt);
 }
 export function createViewTable(
   data: Array<Array<String>>,
-  commandText: string
+  commandElt: JSX.Element,
+  outputElt: JSX.Element
 ) {
   return (
-    <div className="table-container">
-      <div>
-        <p>{commandText}</p>
-      </div>
-      <table>
+    <div>
+      <div>{commandElt}</div>
+      <div>{outputElt}</div>
+      <table className="table-container">
         <tbody>
           {data.map((row, rowIndex) => (
             <tr key={rowIndex}>
@@ -136,6 +138,9 @@ function mockHandleSearch(
         output = fileData.filter(
           (row, i) => (!headers || i > 0) && row[columnIdx] == value
         );
+        if (headers) {
+          output.unshift(fileData[0]);
+        }
       } else {
         output = Array.from([["Column index out of bounds"]]);
       }
@@ -149,6 +154,7 @@ function mockHandleSearch(
           output = fileData.filter(
             (row, i) => i > 0 && row[headerCol] == value
           );
+          output.unshift(headerRow);
         }
       } else {
         output = Array.from([

@@ -35,3 +35,6 @@ button {
   align-items: center;
   margin: auto;
 }
+.small-font {
+  font-size: 16px;
+}
