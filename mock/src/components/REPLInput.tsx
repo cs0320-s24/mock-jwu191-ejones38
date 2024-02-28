@@ -10,8 +10,8 @@ import {
 } from "./Handlers";
 
 interface REPLInputProps {
-  history: string[];
-  setHistory: Dispatch<SetStateAction<string[]>>;
+  history: JSX.Element[];
+  setHistory: Dispatch<SetStateAction<JSX.Element[]>>;
 }
 
 export function REPLInput(props: REPLInputProps) {
@@ -22,7 +22,7 @@ export function REPLInput(props: REPLInputProps) {
 
   const [file, setFile] = useState<String>("");
 
-  const commandMap = new Map<string, REPLFunction>([
+  const commandMap: Map<String, REPLFunction> = new Map<string, REPLFunction>([
     ["mode", handleMode],
     ["view", handleView],
     ["load_file", handleLoad],
@@ -39,13 +39,13 @@ export function REPLInput(props: REPLInputProps) {
       if (command != undefined) {
         commandReturn = command(commandArgs, modeBrief, setMode, file, setFile);
       } else {
-        commandReturn = "Command does not exist :(";
+        commandReturn = <p>{"Command does not exist :("}</p>;
       }
     } else {
-      commandReturn = "";
+      commandReturn = <p>{""}</p>;
     }
 
-    props.setHistory([...props.history, commandReturn]);
+    props.setHistory([...props.history, commandReturn]); //FIX THIS LATER
     setCommandString("");
   }
 

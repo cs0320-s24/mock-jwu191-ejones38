@@ -10,7 +10,7 @@ export interface REPLFunction {
     setBrief: Dispatch<SetStateAction<Boolean>>,
     file: String,
     setFileName: Dispatch<SetStateAction<String>>
-  ): string;
+  ): JSX.Element;
 }
 
 function modeifyOutput(
@@ -20,11 +20,31 @@ function modeifyOutput(
   output: Array<Array<String>>
 ) {
   if (brief) {
-    return output.join("<br>");
+    return createViewTable(output);
   }
   let commandText = "Command: " + command + args.slice(1, undefined).join(" ");
+  createViewTable(output);
   output.unshift([commandText]);
-  return output.join("~new row~");
+  return createViewTable(output);
+}
+export function createViewTable(data: Array<Array<String>>) {
+  return (
+    <div className="table-container">
+      {" "}
+      <h2></h2>
+      <table>
+        <tbody>
+          {data.map((row, rowIndex) => (
+            <tr key={rowIndex}>
+              {row.map((cell, cellIndex) => (
+                <td key={cellIndex}>{cell}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 function mockHandleView(
