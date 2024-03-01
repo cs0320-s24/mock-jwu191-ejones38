@@ -318,7 +318,9 @@ test("test search by index/index out of bounds", async ({ page }) => {
   expect(output3).toEqual("Command: search & 2 & 12Output: Orange1.012");
 });
 
-test("test search by column/(column doesn't exist/no headers)", async ({ page }) => {
+test("test search by column/(column doesn't exist/no headers)", async ({
+  page,
+}) => {
   await page.getByLabel("Login").click();
   await page
     .getByLabel("Command input")
@@ -368,7 +370,7 @@ test("test search by column/(column doesn't exist/no headers)", async ({ page })
     "File has no headers; Cannot do string column search"
   );
   expect(output2).toEqual("NameAgeCountryEmily25Canada");
-  expect(output3).toEqual("NameAgeCountry");
+  expect(output3).toEqual("No matching entries found");
   expect(output4).toEqual(
     "Command: search & Nintendo & 44Output: Column could not be found"
   );
