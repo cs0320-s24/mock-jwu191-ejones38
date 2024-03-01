@@ -6,6 +6,8 @@ interface REPLHistoryProps {
   history: JSX.Element[];
 }
 export function REPLHistory(props: REPLHistoryProps) {
+  
+
   return (
     <div className="repl-history">
       {/* This is where command history will go */}

@@ -1041,9 +1041,26 @@ const mockDataEducation = [
     "2",
   ],
 ];
+const mockSmall = [
+  ["Name", "Age", "Country"],
+  ["John", "30", "USA"],
+  ["Emily", "25", "Canada"],
+  ["Michael", "35", "UK"],
+  ["Sophia", "28", "France"],
+];
 
+const mockSmall2 = [
+  ["Apple", "1.25", "10"],
+  ["Banana", "0.75", "15"],
+  ["Orange", "1.0", "12"],
+  ["Grapes", "2.5", "8"],
+];
+const empty: any[] = []
 export const mockData = new Map<String, Array<Array<String>>>([
   ["income_by_race.csv", mockDataIncome],
   ["dol_ri_earnings_disparity.csv", mockDataEarningsDisparity],
   ["postsecondary_education.csv", mockDataEducation],
+  ["mockSmall.csv", mockSmall],
+  ["empty.csv", empty],
+  ["mockSmall2.csv", mockSmall2]
 ]);

@@ -25,10 +25,12 @@ function modeifyOutput(
   if (brief) {
     return createViewTable(output, <div />, <div />);
   }
-  const commandText =
-    "Command: " + command + " & " + args.slice(1, undefined).join(" & ");
+  let commandText = "Command: " + command;
+  if (args.length > 1) {
+    commandText += " & " + args.slice(1, undefined).join(" & ");
+  }
   const commandElt = <h2 className="small-font">{commandText}</h2>;
-  const outputElt = <h2 className="small-font">{"Output:"}</h2>;
+  const outputElt = <h2 className="small-font">{"Output: "}</h2>;
   return createViewTable(modifiedOutput, commandElt, outputElt);
 }
 export function createViewTable(
@@ -95,7 +97,7 @@ function mockHandleLoad(
     if (fileData == undefined) {
       output = Array.from([["File " + fileName + " does not exist"]]);
     } else {
-      output = Array.from([["File " + file + " loaded successfully."]]);
+      output = Array.from([["File " + fileName + " loaded successfully."]]);
       if (headersStr.toLowerCase() == "true") {
         if (fileData.length == 0) {
           output = Array.from([["File is not long enough to have headers"]]);
@@ -144,7 +146,8 @@ function mockHandleSearch(
       } else {
         output = Array.from([["Column index out of bounds"]]);
       }
-    } else {
+    } 
+    else {
       if (headers) {
         const headerRow = fileData[0]; // We ensure that the first row exists in mockHandleLoad
         const headerCol = headerRow.findIndex((e) => e == column);
