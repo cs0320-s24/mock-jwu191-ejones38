@@ -2,11 +2,18 @@ import { Dispatch, SetStateAction, useState } from "react";
 import "../../styles/main.css";
 import { mockData } from "../Data/MockData";
 import { type } from "os";
+import { modeifyOutput } from "../Utilities/Utilities";
 
+/**
+ * Interface representing a function that handles REPL commands.
+ */
 export interface REPLFunction {
   (args: Array<string>, statefuls: REPLFuctionStatefulInputProps): JSX.Element;
 }
 
+/**
+ * Interface representing the stateful inputs required by REPL functions.
+ */
 export interface REPLFuctionStatefulInputProps {
   brief: Boolean;
   setBrief: Dispatch<SetStateAction<Boolean>>;
@@ -16,68 +23,12 @@ export interface REPLFuctionStatefulInputProps {
   setHeaders: Dispatch<SetStateAction<Boolean>>;
 }
 
-function modeifyOutput(
-  brief: Boolean,
-  tableify: Boolean,
-  command: String,
-  args: Array<String>,
-  output: Array<Array<String>>
-) {
-  let copiedOutput = [...output];
-  if (brief) {
-    if (tableify) {
-      return createViewTable(output, <div />, <div />);
-    } else {
-      return (
-        <div>
-          <h2 className="small-font">{output.toString()}</h2>
-        </div>
-      );
-    }
-  }
-
-  let commandText = "Command: " + command;
-  if (args.length > 1) {
-    commandText += " & " + args.slice(1, undefined).join(" & ");
-  }
-
-  if (tableify) {
-    const commandElt = <h2 className="small-font">{commandText}</h2>;
-    const outputElt = <h2 className="small-font">{"Output: "}</h2>;
-    return createViewTable(copiedOutput, commandElt, outputElt);
-  } else {
-    return (
-      <div>
-        <h2 className="small-font">{commandText}</h2>
-        <h2 className="small-font">{"Output: " + output.toString()}</h2>
-      </div>
-    );
-  }
-}
-export function createViewTable(
-  data: Array<Array<String>>,
-  commandElt: JSX.Element,
-  outputElt: JSX.Element
-) {
-  return (
-    <div>
-      <div>{commandElt}</div>
-      <div>{outputElt}</div>
-      <table className="table-container">
-        <tbody>
-          {data.map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              {row.map((cell, cellIndex) => (
-                <td key={cellIndex}>{cell}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
+/**
+ * Mocks the 'view' REPL command.
+ * @param {Array<string>} args - Arguments passed to the 'view' command.
+ * @param {REPLFunctionStatefulInputProps} statefuls - Stateful inputs for the REPL function.
+ * @returns {JSX.Element} The JSX representation of the command output.
+ */
 function mockHandleView(
   args: Array<string>,
   statefuls: REPLFuctionStatefulInputProps
@@ -96,6 +47,12 @@ function mockHandleView(
   return modeifyOutput(statefuls.brief, tableify, "view", args, output);
 }
 
+/**
+ * Mocks the 'load_file' REPL command.
+ * @param {Array<string>} args - Arguments passed to the 'load_file' command.
+ * @param {REPLFunctionStatefulInputProps} statefuls - Stateful inputs for the REPL function.
+ * @returns {JSX.Element} The JSX representation of the command output.
+ */
 function mockHandleLoad(
   args: Array<string>,
   statefuls: REPLFuctionStatefulInputProps
@@ -127,6 +84,12 @@ function mockHandleLoad(
   return modeifyOutput(statefuls.brief, false, "load_file", args, output);
 }
 
+/**
+ * Mocks the 'search' REPL command.
+ * @param {Array<string>} args - Arguments passed to the 'search' command.
+ * @param {REPLFunctionStatefulInputProps} statefuls - Stateful inputs for the REPL function.
+ * @returns {JSX.Element} The JSX representation of the command output.
+ */
 function mockHandleSearch(
   args: Array<string>,
   statefuls: REPLFuctionStatefulInputProps
@@ -183,6 +146,12 @@ function mockHandleSearch(
   return modeifyOutput(statefuls.brief, tableify, "search", args, output);
 }
 
+/**
+ * Handles the 'mode' REPL command.
+ * @param {Array<string>} args - Arguments passed to the 'mode' command.
+ * @param {REPLFunctionStatefulInputProps} statefuls - Stateful inputs for the REPL function.
+ * @returns {JSX.Element} The JSX representation of the command output.
+ */
 export function handleMode(
   args: Array<string>,
   statefuls: REPLFuctionStatefulInputProps

@@ -1,3 +1,4 @@
+/** A String[][] containing a subset of data from income_by_race.csv. */
 const mockDataIncome = [
   [
     "ID Race",
@@ -804,6 +805,7 @@ const mockDataIncome = [
   ],
 ];
 
+/** A String[][] containing data from dol_ri_earnings_disparity.csv. */
 const mockDataEarningsDisparity = [
   [
     "State",
@@ -835,6 +837,7 @@ const mockDataEarningsDisparity = [
   ["RI", "Multiracial", " $971.89 ", "8883.049171", " $0.92 ", "2%"],
 ];
 
+/** A String[][] containing data from postsecondary_education.csv. */
 const mockDataEducation = [
   [
     "IPEDS Race",
@@ -1041,6 +1044,8 @@ const mockDataEducation = [
     "2",
   ],
 ];
+
+/** A String[][] containing a small set of CSV data. */
 const mockSmall = [
   ["Name", "Age", "Country"],
   ["John", "30", "USA"],
@@ -1049,18 +1054,27 @@ const mockSmall = [
   ["Sophia", "28", "France"],
 ];
 
+/** A String[][] containing a small set of CSV data. */
 const mockSmall2 = [
   ["Apple", "1.25", "10"],
   ["Banana", "0.75", "15"],
   ["Orange", "1.0", "12"],
   ["Grapes", "2.5", "8"],
 ];
-const empty: any[] = []
+
+/** A String[][] containing a set of CSV data with on column. */
+const oneColumn = [["Only Column"], ["bingo"], ["bongo"], ["mingo"], ["mongo"]];
+
+/** A String[][] containing a set of empty CSV data. */
+const empty: any[] = [];
+
+/** A Map<String, Array<Array<String>>> mapping filename to the file data above. */
 export const mockData = new Map<String, Array<Array<String>>>([
   ["income_by_race.csv", mockDataIncome],
   ["dol_ri_earnings_disparity.csv", mockDataEarningsDisparity],
   ["postsecondary_education.csv", mockDataEducation],
   ["mockSmall.csv", mockSmall],
   ["empty.csv", empty],
-  ["mockSmall2.csv", mockSmall2]
+  ["mockSmall2.csv", mockSmall2],
+  ["oneColumn.csv", oneColumn],
 ]);

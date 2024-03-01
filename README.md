@@ -4,18 +4,29 @@ Project 3: Mock
 Team members: ejones38 jwu191
 Time Estimate: 15 hours
 Github link: https://github.com/cs0320-s24/mock-jwu191-ejones38.git
+
 # Design Choices
 
 ## REPLFunction
-We chose to modify our repl function interface by adding additional parameters. We require any function implementing the interface to take in a boolean for the type of response, an array of string corresponding to its arguments, a string corresponding to the name of the file, and a boolean representing if the file has headers along with the setters for all of the above arguments. We chose to do so in order to garuantee that all of our functions have the required information to return the proper response. Additionally our repl function returns JSX.Elements instead of 2d array of strings. By  returning JSX.ELements we our able to format our responses all in one step which making response generation much simpler. Additionally by returning JSX.Elements we our able to change our output between brief and verbose all in one step saving considerable effort. 
+
+We chose to modify our repl function interface by adding additional parameters. We require any function implementing the interface to take in a boolean for the type of response, an array of string corresponding to its arguments, a string corresponding to the name of the file, and a boolean representing if the file has headers along with the setters for all of the above arguments. We chose to do so in order to garuantee that all of our functions have the required information to return the proper response. Additionally our repl function returns JSX.Elements instead of 2d array of strings. By returning JSX.ELements we our able to format our responses all in one step which making response generation much simpler. Additionally by returning JSX.Elements we our able to change our output between brief and verbose all in one step saving considerable effort.
+
 ## History Type
+
 In this project we chose to have represent our history as a array of JSX.Elements. Since our functions all return JSX.Elements it made sense to just directly add those elements to our history instead of interconverting our outputs between a 2d array of strings and a JSX.Elemen
+
 ## Handlers class
-All of our command functions are stored in the Handlers class. Each handler implements the REPLFunction interface taking in series of arguments and returning a JSX.Element By having all handlers contained in the same class it simplifies the addition of new commands 
+
+All of our command functions are stored in the Handlers class. Each handler implements the REPLFunction interface taking in series of arguments and returning a JSX.Element By having all handlers contained in the same class it simplifies the addition of new commands
+
 ## Command Selection
+
 Commands are input through a command line. We split this input into an array of arguments with the first argument being the command name itself. All commands alos exist in a map of key (command name) to value (commmand function). This allows us to take commandline input, separate it into its arguemtns, and pass the command name to our map returning the correct command function. This enables us to add and remove commands easily from our front-end program.
+
 ## Overall Design
-Our User input is contained within the repl input class. When command is called our repl input takes that command string breaks up its arguments and uses those arguments to call the proper command handler. This handlers output is then added to our replhistory. Repl hsitory adds our command output to the screen where it is displayed to users. 
+
+Our User input is contained within the repl input class. When command is called our repl input takes that command string breaks up its arguments and uses those arguments to call the proper command handler. This handlers output is then added to our replhistory. Repl hsitory adds our command output to the screen where it is displayed to users. There
+was a tradeoff between if-else nesting depth and the number of times we call modeifyOutput. We chose to have deeper nesting depth but call modeifyOutput only once. This is an aesthetic choice.
 
 # Errors/Bugs
 
@@ -37,6 +48,7 @@ successfull view: tests that view properly displays the conents of a loaded file
 view different files: tests that only the currently loaded file is able to be viewed on screen
 search with improper args/no file loaded: makes sure the proper response is returned if search has improper args/ no file loaded
 search by index/index out of bounds: tests that searching by index returns the correct data. Also tests that indices outside the bounds of the dataset return the proper error response
+test search data with one column: tests that searching through a csv with one column works properly.
 search by column/(column doesn't exist/no headers): tests that searching by column name returns the proper response. Tests that the correct response is return when the column header does not exist. Also tests that the correct message is returned when a user tries to search by headers for a file that was stated to not have headers.
 
 \*majority of tests functions test with both brief and verbose output. All commands called on multiple datasets

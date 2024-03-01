@@ -13,13 +13,6 @@ test.beforeEach(async ({ page }) => {
   await page.goto("http://localhost:8000/");
 });
 
-/**
- * Don't worry about the "async" yet. We'll cover it in more detail
- * for the next sprint. For now, just think about "await" as something
- * you put before parts of your test that might take time to run,
- * like any interaction with the page.
- */
-
 test("on page load, i see a login button", async ({ page }) => {
   await expect(page.getByLabel("Login")).toBeVisible();
 });
@@ -316,6 +309,58 @@ test("test search by index/index out of bounds", async ({ page }) => {
   expect(output1).toEqual("Orange1.012");
   expect(output2).toEqual("Column index out of bounds");
   expect(output3).toEqual("Command: search & 2 & 12Output: Orange1.012");
+});
+
+test("test search data with one column", async ({ page }) => {
+  await page.getByLabel("Login").click();
+  await page
+    .getByLabel("Command input")
+    .fill("load_file & oneColumn.csv & true");
+  await page.getByRole("button", { name: "Submitted 0 times" }).click();
+
+  await page.getByLabel("Command input").fill("search & 0 & bingo");
+  await page.getByRole("button", { name: "Submitted 1 times" }).click();
+
+  await page.getByLabel("Command input").fill("search & Only Column & bongo");
+  await page.getByRole("button", { name: "Submitted 2 times" }).click();
+
+  await page.getByLabel("Command input").fill("mode");
+  await page.getByRole("button", { name: "Submitted 3 times" }).click();
+
+  await page.getByLabel("Command input").fill("search & 0 & wumbo");
+  await page.getByRole("button", { name: "Submitted 4 times" }).click();
+
+  await page.getByLabel("Command input").fill("search & 1 & bingo");
+  await page.getByRole("button", { name: "Submitted 5 times" }).click();
+
+  const output1 = await page.evaluate(() => {
+    const history = document.querySelector(".repl-history");
+    return history?.children[1]?.textContent;
+  });
+
+  const output2 = await page.evaluate(() => {
+    const history = document.querySelector(".repl-history");
+    return history?.children[2]?.textContent;
+  });
+
+  const output3 = await page.evaluate(() => {
+    const history = document.querySelector(".repl-history");
+    return history?.children[4]?.textContent;
+  });
+
+  const output4 = await page.evaluate(() => {
+    const history = document.querySelector(".repl-history");
+    return history?.children[5]?.textContent;
+  });
+
+  expect(output1).toEqual("Only Columnbingo");
+  expect(output2).toEqual("Only Columnbongo");
+  expect(output3).toEqual(
+    "Command: search & 0 & wumboOutput: No matching entries found"
+  );
+  expect(output4).toEqual(
+    "Command: search & 1 & bingoOutput: Column index out of bounds"
+  );
 });
 
 test("test search by column/(column doesn't exist/no headers)", async ({
